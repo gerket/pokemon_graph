@@ -5,6 +5,10 @@ import plotly.graph_objs as go
 
 ############# Make changes here
 
+
+app = dash.Dash()
+server = app.server
+
 app.layout = html.Div(children=[
     html.H1('Plotly Dash - the best way to visualize your data!'),
     dcc.Graph(
@@ -26,8 +30,6 @@ app.layout = html.Div(children=[
 
 ###### Don't change anything here
 
-app = dash.Dash()
-server = app.server
 
 
 if __name__ == '__main__':
