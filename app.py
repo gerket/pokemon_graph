@@ -10,7 +10,10 @@ server = app.server
 ############# Make changes here
 
 app.layout = html.Div(
-    html.Label('Multi-Select Dropdown'),
+    
+
+    children=[
+        html.Label('Multi-Select Dropdown'),
     dcc.Dropdown(
         options=[
             {'label': 'New York City', 'value': 'NYC'},
@@ -21,7 +24,6 @@ app.layout = html.Div(
         multi=True
     ),
 
-    children=[
     html.H1('This is a better title!'),
     dcc.Graph(
         id='this_is_an_id',
