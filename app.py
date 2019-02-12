@@ -2,6 +2,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
+import requests
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -10,15 +11,46 @@ server = app.server
 
 ############# Make changes here
 
+
+url_parameters = dict(
+    base_url = "pokeapi.co",
+    directory = "api/v2/pokemon",
+    pokemon_id = 58
+)
+
+def reset_endpoint():
+    global endpoint
+    endpoint = "http://{base_url}/{directory}/{pokemon_id}".format(**url_parameters)
+
+endpoint  = "http://{base_url}/{directory}/{pokemon_id}".format(**url_parameters)
+
+url_parameters['pokemon_id']=''
+reset_endpoint()
+
+temp_results = requests.get(endpoint)
+
+temp_results = temp_results.json()
+temp_results = requests.get(endpoint + '?offset=0&limit='+str(temp_results['count']))
+temp_results = temp_results.json()
+
+name_url = dict()
+for i in temp_results['results']:
+    name_url[i['name']]=i['url']
+
+multi_select_options = []
+for i in temp_results['results']:
+    multi_select_options.append(
+    {
+        'label':i['name'],
+        'value':i['name']
+    })
+
+
 app.layout = html.Div(
     children=[
-        html.Label('Multi-Select Dropdown'),
+        html.Label('Choose Pokemon to compare:'),
         dcc.Dropdown(
-            options=[
-                {'label': 'New York City', 'value': 'NYC'},
-                {'label': u'Montréal', 'value': 'MTL'},
-                {'label': 'San Francisco', 'value': 'SF'}
-            ],
+            options=multi_select_options,
             value=['MTL', 'SF'],
             multi=True
         ),
