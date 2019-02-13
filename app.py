@@ -2,6 +2,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
+import plotly.plotly as py
 import requests
 import pandas as pd
 
@@ -128,6 +129,7 @@ def update_graph(input_pokemon_choices):
     )
 
     fig=go.Figure(data=traces, layout=layout)
+    py.iplot(fig, filename='grouped-bar')
     return fig
 
 
