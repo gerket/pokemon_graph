@@ -129,7 +129,7 @@ def update_graph(input_pokemon_choices):
     )
 
     fig=go.Figure(data=traces, layout=layout)
-    py.iplot(fig, filename='grouped-bar')
+    #py.iplot(fig, filename='grouped-bar')
     return fig
 
 
