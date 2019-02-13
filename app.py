@@ -59,7 +59,7 @@ app.layout = html.Div([
         html.H2('Comparison Graphs:'),
         dcc.Graph(
             id='graph_fig',
-            figure=go.Figure()
+            #figure=go.Figure()
             # figure={
             #     'data': [
             #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 8, 2], 'type': 'bar', 'name': 'Intelligence'},
@@ -78,8 +78,7 @@ app.layout = html.Div([
 
 @app.callback(
     dash.dependencies.Output('graph_fig', 'figure'),
-    [dash.dependencies.Input('pokemon_choices','value')]
-)
+    [dash.dependencies.Input('pokemon_choices','value')])
 def update_graph(input_pokemon_choices):
     if type(input_pokemon_choices)==str:
         input_pokemon_choices = [input_pokemon_choices]
@@ -125,7 +124,7 @@ def update_graph(input_pokemon_choices):
     }
 
     fig={'data':traces, 'layout':go.Layout(layout)}
-    return go.Figure(fig)
+    return fig#go.Figure(fig)
 
 
 
