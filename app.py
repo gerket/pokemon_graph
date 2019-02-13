@@ -124,8 +124,7 @@ def update_graph(input_pokemon_choices):
             )
         )
     layout = go.Layout(
-        barmode='group',
-        title='Pokemon Base Stats Comparison'
+        barmode='group'
     )
 
     fig=go.Figure(data=traces, layout=layout)
