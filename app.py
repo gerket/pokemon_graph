@@ -51,7 +51,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='pokemon_choices',
                 options=[{'label':i['name'].capitalize(), 'value':i['name']} for i in temp_results['results']],
-                value=[],
+                value='bulbasaur',
                 multi=True
             ),
         ]),
@@ -59,7 +59,7 @@ app.layout = html.Div([
         html.H2('Comparison Graphs:'),
         dcc.Graph(
             id='graph_fig',
-            #figure=go.Figure()
+            figure=go.Figure()
             # figure={
             #     'data': [
             #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 8, 2], 'type': 'bar', 'name': 'Intelligence'},
@@ -124,7 +124,7 @@ def update_graph(input_pokemon_choices):
     }
 
     fig={'data':traces, 'layout':go.Layout(layout)}
-    return fig#go.Figure(fig)
+    return go.Figure(fig)
 
 
 
