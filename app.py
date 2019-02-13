@@ -60,17 +60,17 @@ app.layout = html.Div([
         dcc.Graph(
             id='graph_fig',
             #figure=go.Figure()
-            # figure={
-            #     'data': [
-            #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 8, 2], 'type': 'bar', 'name': 'Intelligence'},
-            #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 3, 2], 'type': 'bar', 'name': 'Weight'},
-            #     ],
-            #     'layout': {
-            #         'title': "Animal Comparison",
-            #         'xaxis':{'title':'Animal'},
-            #         'yaxis':{'title':'Completely science-backed numbers with no metric'},
-            #     }
-            # }
+            figure={
+                'data': [
+                    {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 8, 2], 'type': 'bar', 'name': 'Intelligence'},
+                    {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 3, 2], 'type': 'bar', 'name': 'Weight'},
+                ],
+                'layout': {
+                    'title': "Animal Comparison",
+                    'xaxis':{'title':'Animal'},
+                    'yaxis':{'title':'Completely science-backed numbers with no metric'},
+                }
+            }
         )
 
     ]
