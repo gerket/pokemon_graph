@@ -43,7 +43,7 @@ for i in temp_results['results']:
 #         'value':i['name']
 #     })
 
-
+app = dash.Dash('Data')
 
 app.layout = html.Div([
         # multi-select dropdown menu
@@ -51,29 +51,29 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='pokemon_choices',
                 options=[{'label':i['name'].capitalize(), 'value':i['name']} for i in temp_results['results']],
-                value='bulbasaur',
+                value=[],
                 multi=True
             ),
         ]),
         # Graphs
-        html.Div([
-            html.H1('Comparing Pokemon Statistics!'),
-            dcc.Graph(
-                id='graph_fig',
-                figure=go.Figure()
-                # {
-                #     'data': [
-                #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 8, 2], 'type': 'bar', 'name': 'Intelligence'},
-                #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 3, 2], 'type': 'bar', 'name': 'Weight'},
-                #     ],
-                #     'layout': {
-                #         'title': "Animal Comparison",
-                #         'xaxis':{'title':'Animal'},
-                #         'yaxis':{'title':'Completely science-backed numbers with no metric'},
-                #     }
-                #}
-            )
-        ])
+
+        html.H1('Comparing Pokemon Statistics!'),
+        dcc.Graph(
+            id='graph_fig',
+            figure=go.Figure()
+            # {
+            #     'data': [
+            #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 8, 2], 'type': 'bar', 'name': 'Intelligence'},
+            #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 3, 2], 'type': 'bar', 'name': 'Weight'},
+            #     ],
+            #     'layout': {
+            #         'title': "Animal Comparison",
+            #         'xaxis':{'title':'Animal'},
+            #         'yaxis':{'title':'Completely science-backed numbers with no metric'},
+            #     }
+            #}
+        )
+
     ]
 )
 
@@ -81,14 +81,14 @@ app.layout = html.Div([
     dash.dependencies.Output('graph_fig', 'figure'),
     [dash.dependencies.Input('pokemon_choices','value')]
 )
-def update_graph(poke_choices):
-    if type(poke_choices)==str:
-        poke_choices = [poke_choices]
+def update_graph(input_pokemon_choices):
+    if type(input_pokemon_choices)==str:
+        input_pokemon_choices = [input_pokemon_choices]
 
     pokedex = dict()
 
     #api calls to get the relevent info for each pokemon
-    for poke_name in poke_choices:
+    for poke_name in input_pokemon_choices:
         temp_results = requests.get(name_url[x])
         temp_results = temp_results.json()
 
@@ -113,17 +113,18 @@ def update_graph(poke_choices):
 
 
     traces = []
-    for col in pd_pokedex.columns:
+    for col in [x for x in pd_pokedex.columns if x != 'Name']:
         traces.append(
-            go.Bar({
+            go.Bar(
                 'x':pd_pokedex['Name'],
                 'y':pd_pokedex[col],
                 'name':col
 
-            })
+            )
         )
     layout = go.Layout(
-        barmode='group'
+        barmode='group',
+        title='Pokemon Base Stats Comparison'
     )
 
     fig=go.Figure(data=traces, layout=layout)
