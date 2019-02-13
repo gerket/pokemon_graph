@@ -59,7 +59,7 @@ app.layout = html.Div([
         html.H2('Comparison Graphs:'),
         dcc.Graph(
             id='graph_fig',
-            figure=go.Figure()
+            #figure=go.Figure()
             # figure={
             #     'data': [
             #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 8, 2], 'type': 'bar', 'name': 'Intelligence'},
@@ -83,15 +83,15 @@ def update_graph(input_pokemon_choices):
     if type(input_pokemon_choices)==str:
         input_pokemon_choices = [input_pokemon_choices]
 
-    if input_pokemon_choices == []:
-        return {
-            ‘data’: [
-                {   ‘x’: 'None',
-                    ‘y’: 0,
-                    ‘type’: ‘bar’,
-                    ‘name’: 'Test'
-                }],
-            ‘layout’: { ‘title’: “Health” } }
+    # if input_pokemon_choices == []:
+    #     return {
+    #         ‘data’: [
+    #             {   ‘x’: 'None',
+    #                 ‘y’: 0,
+    #                 ‘type’: ‘bar’,
+    #                 ‘name’: 'Test'
+    #             }],
+    #         ‘layout’: { ‘title’: “Health” } }
     pokedex = dict()
 
     #api calls to get the relevent info for each pokemon
@@ -133,7 +133,7 @@ def update_graph(input_pokemon_choices):
     }
 
     fig={'data':traces, 'layout':go.Layout(layout)}
-    return go.Figure(fig)
+    return {'data':traces, 'layout':layout}#go.Figure(fig)
 
 
 
