@@ -2,7 +2,6 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
-#import plotly.plotly as py
 import requests
 import pandas as pd
 
@@ -46,7 +45,8 @@ for i in temp_results['results']:
 
 app.layout = html.Div([
         # multi-select dropdown menu
-        html.Div([html.Label('Choose Pokemon to compare:'),
+        html.Div([
+            html.Label('Choose Pokemon to compare:'),
             dcc.Dropdown(
                 id='pokemon_choices',
                 options=[{'label':i['name'].capitalize(), 'value':i['name']} for i in temp_results['results']],
