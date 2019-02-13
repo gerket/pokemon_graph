@@ -88,7 +88,7 @@ def update_graph(input_pokemon_choices):
 
     #api calls to get the relevent info for each pokemon
     for poke_name in input_pokemon_choices:
-        temp_results = requests.get(name_url[x])
+        temp_results = requests.get(name_url[poke_name])
         temp_results = temp_results.json()
 
         temp_poke_df = pd.DataFrame(temp_results['stats'])
@@ -114,20 +114,19 @@ def update_graph(input_pokemon_choices):
     traces = []
     for col in [x for x in pd_pokedex.columns if x != 'Name']:
         traces.append(
-            go.Bar(
-                x=pd_pokedex['Name'],
-                y=pd_pokedex[col],
-                name=col
-
-            )
+            go.Bar({
+                'x':list(pd_pokedex['Name']),
+                'y':list(pd_pokedex[col]),
+                'name':col
+            })
         )
-    layout = go.Layout(
-        barmode='group'
-    )
+    layout = {
+        'barmode':'group'
+    }
 
-    fig=go.Figure(data=traces, layout=layout)
+    fig={'data':traces, 'layout':go.Layout(layout)}
     #py.iplot(fig, filename='grouped-bar')
-    return fig
+    return go.Figure(fig)
 
 
 
