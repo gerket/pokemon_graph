@@ -116,9 +116,9 @@ def update_graph(input_pokemon_choices):
     for col in [x for x in pd_pokedex.columns if x != 'Name']:
         traces.append(
             go.Bar(
-                'x':pd_pokedex['Name'],
-                'y':pd_pokedex[col],
-                'name':col
+                x=pd_pokedex['Name'],
+                y=pd_pokedex[col],
+                name=col
 
             )
         )
