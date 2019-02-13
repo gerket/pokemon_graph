@@ -133,7 +133,11 @@ def update_graph(input_pokemon_choices):
     }
 
     fig={'data':traces, 'layout':go.Layout(layout)}
-    return {'data':traces, 'layout':layout}#go.Figure(fig)
+    #return {'data':traces, 'layout':layout}#go.Figure(fig)
+    return {
+        'data':[{'x':list(pd_pokedex['Name']), 'y':list(pd_pokedex['Hp']), 'name':'Hp', 'type':'bar'}],
+        'layout': {'title':'Hp comparison graph'}
+    }
 
 
 
