@@ -95,7 +95,7 @@ def update_graph(input_pokemon_choices):
         temp_poke_df['stat_name'] = [x['name'].capitalize() for x in temp_poke_df['stat']] #capitalize here
         temp_poke_df.drop(columns=['stat', 'effort'], inplace=True)
 
-        pokedex[x] = {'name':temp_results['name'],'df':temp_poke_df, 'id':temp_results['id']}
+        pokedex[poke_name] = {'name':temp_results['name'],'df':temp_poke_df, 'id':temp_results['id']}
 
     # Converting dict of stats into dataframe
     pd_pokedex = pd.DataFrame()
