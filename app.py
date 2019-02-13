@@ -44,8 +44,6 @@ for i in temp_results['results']:
 #         'value':i['name']
 #     })
 
-app = dash.Dash('Data')
-
 app.layout = html.Div([
         # multi-select dropdown menu
         html.Div([html.Label('Choose Pokemon to compare:'),
