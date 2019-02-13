@@ -59,74 +59,74 @@ app.layout = html.Div([
         html.H1('Comparing Pokemon Statistics!'),
         dcc.Graph(
             id='graph_fig',
-            figure=go.Figure()
-            # {
-            #     'data': [
-            #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 8, 2], 'type': 'bar', 'name': 'Intelligence'},
-            #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 3, 2], 'type': 'bar', 'name': 'Weight'},
-            #     ],
-            #     'layout': {
-            #         'title': "Animal Comparison",
-            #         'xaxis':{'title':'Animal'},
-            #         'yaxis':{'title':'Completely science-backed numbers with no metric'},
-            #     }
-            #}
+            #figure=go.Figure()
+            figure={
+                'data': [
+                    {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 8, 2], 'type': 'bar', 'name': 'Intelligence'},
+                    {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 3, 2], 'type': 'bar', 'name': 'Weight'},
+                ],
+                'layout': {
+                    'title': "Animal Comparison",
+                    'xaxis':{'title':'Animal'},
+                    'yaxis':{'title':'Completely science-backed numbers with no metric'},
+                }
+            }
         )
 
     ]
 )
 
-@app.callback(
-    dash.dependencies.Output('graph_fig', 'figure'),
-    [dash.dependencies.Input('pokemon_choices','value')]
-)
-def update_graph(input_pokemon_choices):
-    if type(input_pokemon_choices)==str:
-        input_pokemon_choices = [input_pokemon_choices]
-
-    pokedex = dict()
-
-    #api calls to get the relevent info for each pokemon
-    for poke_name in input_pokemon_choices:
-        temp_results = requests.get(name_url[poke_name])
-        temp_results = temp_results.json()
-
-        temp_poke_df = pd.DataFrame(temp_results['stats'])
-        temp_poke_df['stat_name'] = [x['name'].capitalize() for x in temp_poke_df['stat']] #capitalize here
-        temp_poke_df.drop(columns=['stat', 'effort'], inplace=True)
-
-        pokedex[poke_name] = {'name':temp_results['name'],'df':temp_poke_df, 'id':temp_results['id']}
-
-    # Converting dict of stats into dataframe
-    pd_pokedex = pd.DataFrame()
-    for n, v in pokedex.items():
-        dat = [list(v['df']['base_stat'])]
-        dat[0].append(n.capitalize()) #capitalize here
-        cols = list(v['df']['stat_name'])
-        cols.append('Name')
-        pd_pokedex = pd_pokedex.append(
-            pd.DataFrame(
-                data=dat, columns=cols
-            )
-        )
-
-
-    traces = []
-    for col in [x for x in pd_pokedex.columns if x != 'Name']:
-        traces.append(
-            go.Bar({
-                'x':list(pd_pokedex['Name']),
-                'y':list(pd_pokedex[col]),
-                'name':col
-            })
-        )
-    layout = {
-        'barmode':'group'
-    }
-
-    fig={'data':traces, 'layout':go.Layout(layout)}
-    #py.iplot(fig, filename='grouped-bar')
-    return go.Figure(fig)
+# @app.callback(
+#     dash.dependencies.Output('graph_fig', 'figure'),
+#     [dash.dependencies.Input('pokemon_choices','value')]
+# )
+# def update_graph(input_pokemon_choices):
+#     if type(input_pokemon_choices)==str:
+#         input_pokemon_choices = [input_pokemon_choices]
+#
+#     pokedex = dict()
+#
+#     #api calls to get the relevent info for each pokemon
+#     for poke_name in input_pokemon_choices:
+#         temp_results = requests.get(name_url[poke_name])
+#         temp_results = temp_results.json()
+#
+#         temp_poke_df = pd.DataFrame(temp_results['stats'])
+#         temp_poke_df['stat_name'] = [x['name'].capitalize() for x in temp_poke_df['stat']] #capitalize here
+#         temp_poke_df.drop(columns=['stat', 'effort'], inplace=True)
+#
+#         pokedex[poke_name] = {'name':temp_results['name'],'df':temp_poke_df, 'id':temp_results['id']}
+#
+#     # Converting dict of stats into dataframe
+#     pd_pokedex = pd.DataFrame()
+#     for n, v in pokedex.items():
+#         dat = [list(v['df']['base_stat'])]
+#         dat[0].append(n.capitalize()) #capitalize here
+#         cols = list(v['df']['stat_name'])
+#         cols.append('Name')
+#         pd_pokedex = pd_pokedex.append(
+#             pd.DataFrame(
+#                 data=dat, columns=cols
+#             )
+#         )
+#
+#
+#     traces = []
+#     for col in [x for x in pd_pokedex.columns if x != 'Name']:
+#         traces.append(
+#             go.Bar({
+#                 'x':list(pd_pokedex['Name']),
+#                 'y':list(pd_pokedex[col]),
+#                 'name':col
+#             })
+#         )
+#     layout = {
+#         'barmode':'group'
+#     }
+#
+#     fig={'data':traces, 'layout':go.Layout(layout)}
+#     #py.iplot(fig, filename='grouped-bar')
+#     return go.Figure(fig)
 
 
 
