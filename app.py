@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
 import requests
+import pandas as pd
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -15,7 +16,7 @@ server = app.server
 url_parameters = dict(
     base_url = "pokeapi.co",
     directory = "api/v2/pokemon",
-    pokemon_id = 58
+    pokemon_id = ''
 )
 
 def reset_endpoint():
@@ -23,9 +24,6 @@ def reset_endpoint():
     endpoint = "http://{base_url}/{directory}/{pokemon_id}".format(**url_parameters)
 
 endpoint  = "http://{base_url}/{directory}/{pokemon_id}".format(**url_parameters)
-
-url_parameters['pokemon_id']=''
-reset_endpoint()
 
 temp_results = requests.get(endpoint)
 
@@ -37,41 +35,101 @@ name_url = dict()
 for i in temp_results['results']:
     name_url[i['name']]=i['url']
 
-multi_select_options = []
-for i in temp_results['results']:
-    multi_select_options.append(
-    {
-        'label':i['name'],
-        'value':i['name']
-    })
+# multi_select_options = []
+# for i in temp_results['results']:
+#     multi_select_options.append(
+#     {
+#         'label':i['name'].capitalize(),
+#         'value':i['name']
+#     })
 
 
-app.layout = html.Div(
-    children=[
-        html.Label('Choose Pokemon to compare:'),
-        dcc.Dropdown(
-            options=multi_select_options,
-            value=['MTL', 'SF'],
-            multi=True
-        ),
 
-        html.H1('This is a better title!'),
-        dcc.Graph(
-            id='this_is_an_id',
-            figure={
-                'data': [
-                    {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 8, 2], 'type': 'bar', 'name': 'Intelligence'},
-                    {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 3, 2], 'type': 'bar', 'name': 'Weight'},
-                ],
-                'layout': {
-                    'title': "Animal Comparison",
-                    'xaxis':{'title':'Animal'},
-                    'yaxis':{'title':'Completely science-backed numbers with no metric'},
-                }
-            }
-        )
+app.layout = html.Div([
+        # multi-select dropdown menu
+        html.Div([html.Label('Choose Pokemon to compare:'),
+            dcc.Dropdown(
+                id='pokemon_choices',
+                options=[{'label':i['name'].capitalize(), 'value':i['name']} for i in temp_results['results']],
+                value='bulbasaur',
+                multi=True
+            ),
+        ]),
+        # Graphs
+        html.Div([
+            html.H1('Comparing Pokemon Statistics!'),
+            dcc.Graph(
+                id='graph_fig',
+                figure=go.Figure()
+                # {
+                #     'data': [
+                #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 8, 2], 'type': 'bar', 'name': 'Intelligence'},
+                #         {'x': ['Dog', 'Cat', 'Lobster'], 'y': [7, 3, 2], 'type': 'bar', 'name': 'Weight'},
+                #     ],
+                #     'layout': {
+                #         'title': "Animal Comparison",
+                #         'xaxis':{'title':'Animal'},
+                #         'yaxis':{'title':'Completely science-backed numbers with no metric'},
+                #     }
+                #}
+            )
+        ])
     ]
 )
+
+@app.callback(
+    dash.dependencies.Output('graph_fig', 'figure'),
+    [dash.dependencies.Input('pokemon_choices','value')]
+)
+def update_graph(poke_choices):
+    if type(poke_choices)==str:
+        poke_choices = [poke_choices]
+
+    pokedex = dict()
+
+    #api calls to get the relevent info for each pokemon
+    for poke_name in poke_choices:
+        temp_results = requests.get(name_url[x])
+        temp_results = temp_results.json()
+
+        temp_poke_df = pd.DataFrame(temp_results['stats'])
+        temp_poke_df['stat_name'] = [x['name'].capitalize() for x in temp_poke_df['stat']] #capitalize here
+        temp_poke_df.drop(columns=['stat', 'effort'], inplace=True)
+
+        pokedex[x] = {'name':temp_results['name'],'df':temp_poke_df, 'id':temp_results['id']}
+
+    # Converting dict of stats into dataframe
+    pd_pokedex = pd.DataFrame()
+    for n, v in pokedex.items():
+        dat = [list(v['df']['base_stat'])]
+        dat[0].append(n.capitalize()) #capitalize here
+        cols = list(v['df']['stat_name'])
+        cols.append('Name')
+        pd_pokedex = pd_pokedex.append(
+            pd.DataFrame(
+                data=dat, columns=cols
+            )
+        )
+
+
+    traces = []
+    for col in pd_pokedex.columns:
+        traces.append(
+            go.Bar({
+                'x':pd_pokedex['Name'],
+                'y':pd_pokedex[col],
+                'name':col
+
+            })
+        )
+    layout = go.Layout(
+        barmode='group'
+    )
+
+    fig=go.Figure(data=traces, layout=layout)
+    return fig
+
+
 
 
 ###### Don't change anything here
