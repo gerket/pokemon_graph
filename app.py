@@ -77,8 +77,8 @@ def update_graph(input_pokemon_choices):
 
     #api calls to get the relevent info for each pokemon
     for poke_name in input_pokemon_choices:
-        temp_results = requests.get(name_url[poke_name])
-        temp_results = temp_results.json()
+        temp_request = requests.get(name_url[poke_name])
+        temp_results = temp_request.json()
 
         temp_poke_df = pd.DataFrame(temp_results['stats'])
         temp_poke_df['stat_name'] = [x['name'].capitalize() for x in temp_poke_df['stat']]
