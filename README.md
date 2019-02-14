@@ -1,4 +1,4 @@
-# tng_heroku_app
+# pokemon_graph
 
 This is a small project that demonstrates Flask and python apps online by using a multi-select dropdown box along with a dynamically updating graph. It incorporates pandas, API calls, and plotly.  
 
