@@ -57,7 +57,7 @@ app.layout = html.Div([
         ]),
         html.Div([
             # Little bit smaller header
-            html.H2('Comparison Graphs:'),
+            html.H2('Comparison Graph:'),
             # Graph placement
             dcc .Graph(
                 id='graph_fig',
