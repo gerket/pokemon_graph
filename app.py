@@ -60,14 +60,14 @@ app.layout = html.Div([
             html.H2('Comparison Graph:'),
             # Graph placement
             dcc .Graph(
-                id='graph_fig',
+                id='base_stat_bar_graph',
                 )
         ])
     ]
 )
 
 @app.callback(
-    dash.dependencies.Output('graph_fig', 'figure'),
+    dash.dependencies.Output('base_stat_bar_graph', 'figure'),
     [dash.dependencies.Input('pokemon_choices','value')])
 def update_graph(input_pokemon_choices):
     if type(input_pokemon_choices)==str:
